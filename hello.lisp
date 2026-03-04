@@ -100,3 +100,55 @@
 (print (first-name '(Madam Major General Paula Jones)))
 (untrace first-name)
 (print (first-name '(Mr Blue Jeans)))
+
+; Higher order functions 
+; A function that takes another function as a argument 
+
+(defun mappend (fn the-list)
+    "Apply fn to each element of list and append the results."
+    (apply #'append (mapcar fn the-list)))
+
+(print (apply #'+ '(1 2 3 4)))
+
+(print (apply #'append '((1 2 3) (a b c))))
+(print (append '((1 2 3) (a b c))))
+
+(defun self-and-double (x) (list x (+ x x )))
+(print (self-and-double 3))
+
+(print (apply #'self-and-double '(3)))
+(print (mapcar #'self-and-double '(1 10 300)))
+(print (mappend #'self-and-double '(1 10 300)))
+
+(defun numbers-and-negations (input) 
+    "Given a list, return only the numbers and their negations."
+    (mappend #'number-and-negation input))
+
+(defun number-and-negation (x) 
+    "If x is a number, return a list of x and -x."
+    (if (numberp x)
+        (list x (- x)) 
+        nil))
+
+(print (numbers-and-negations '(testing 1 2 3 test)))
+
+(defun mappend (fn the-list) 
+    "Apply fn to each element of list and append the results."
+    (if (null the-list) 
+        nil
+        (append (funcall fn (first the-list)) 
+            (mappend fn (rest the-list)))))
+
+(print (funcall #'+ 2 3 ))
+(print (apply #'+ '(2 3)))
+; (print (funcall #'+ '(2 3))) => Error 
+
+(print ((lambda (x) (+ x 2)) 4))
+(print (funcall #'(lambda (x) (+ x 2)) 4))
+
+(print (mappend #'(lambda (l) (list l (reverse l))) 
+            '((1 2 3) (a b c))))
+
+(print "a string")
+(print (length "a string"))
+(print (length ""))
